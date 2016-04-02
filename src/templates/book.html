@@ -1,8 +1,10 @@
 <div id="book" class="container">
 <!-- Book Begin -->
   <img class="img-responsive" src="{{book.img}}" alt="{{book.title}}">
-  <button class="btn btn-success" ng-click="like()">Like</button>
-  <button class="btn btn-danger" ng-click="unlike()">Unlike</button>
-  <button class="btn btn-info" ng-click="notRead()">Didn't Read</button>
+  <button class="btn btn-success" ng-click="like()" ng-show="!book.read">Like</button>
+  <button class="btn btn-danger" ng-click="unlike()" ng-show="!book.read">Unlike</button>
+  <button class="btn btn-info" ng-click="notRead()" ng-show="book.read">Didn't Read</button>
+  <br>
+  <button class="btn" ng-swipe-left="swipe()">Swipe</button>
 <!-- Book End -->
 </div>
