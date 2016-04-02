@@ -7,55 +7,48 @@ module.exports.getBooks = function (req, res) {
 };
 
 module.exports.insert = function (req, res) {
+  Books.create(req.body, function (err, results) {
+    res.json(results);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(results);
+    }
+  });
+};
 
+function updateDB(request, response, options) {
+  bookID = request.body['bookID'];
+  userID = request.body['userID'];
+  Books.update({ _id: bookID }, options ,function (err, results) {
+    response.json(results);
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(results);
+    }
+  });
 };
 
 module.exports.updateLike = function (req, res) {
-  bookID = req.body['bookID'];
-  userID = req.body['userID'];
-  Books.update({ _id: bookID },
-                         {
-                            $addToSet: { usersLiked: userID },
-                            $pull: { usersUnLiked: userID }
-                          } ,function (err, results) {
-    res.json(results);
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(results);
-    }
-  });
+  var options = {
+    $addToSet: { usersLiked: req.body['userID'] },
+    $pull: { usersUnLiked: req.body['userID'] }
+  };
+  updateDB(req, res, options);
 };
 
 module.exports.updateUnLike = function (req, res) {
-  bookID = req.body['bookID'];
-  userID = req.body['userID'];
-  Books.update({ _id: bookID },
-                         {
-                            $addToSet: { usersUnLiked: userID },
-                            $pull: { usersLiked: userID }
-                          } ,function (err, results) {
-    res.json(results);
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(results);
-    }
-  });
+  var options = {
+    $addToSet: { usersUnLiked: req.body['userID'] },
+    $pull: { usersLiked: req.body['userID'] }
+  };
+  updateDB(req, res, options);
 };
 
 module.exports.updateNotRead = function (req, res) {
-  bookID = req.body['bookID'];
-  userID = req.body['userID'];
-  Books.update({ _id: bookID },
-                         {
-                            $pull: { usersUnLiked: userID,  usersLiked: userID }
-                          } ,function (err, results) {
-    res.json(results);
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(results);
-    }
-  });
+  var options = {
+    $pull: { usersUnLiked: req.body['userID'],  usersLiked: req.body['userID'] }
+  };
+  updateDB(req, res, options);
 };
