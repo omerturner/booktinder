@@ -1,0 +1,26 @@
+{
+  "name": "BookTinder",
+  "version": "1.0.0",
+  "description": "BookTinder",
+  "main": "server.js",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.3",
+    "mongoose": "^4.3.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omerturner/omerturner.me.git"
+  },
+  "author": "Omer Turner",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omerturner/omerturner.me/issues"
+  },
+  "homepage": "https://github.com/omerturner/omerturner.me#readme"
+}
