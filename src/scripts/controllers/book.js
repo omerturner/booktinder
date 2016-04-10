@@ -3,7 +3,8 @@
 angular.module('mainApp')
 .controller('booksCtrl', function($scope, dataService) {
 
-  $scope.userID = "56ff918544ae2660d9cb2a8c"
+  $scope.userID = "56ff997244ae2660d9cb2a94";
+  $scope.booksLiked = ["56ffda528d1b682542468fdc"];
 
   dataService.getBooks(function(response) {
     $scope.books = response.data;
