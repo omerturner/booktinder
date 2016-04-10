@@ -3,6 +3,7 @@ var express              = require("express"),
       bodyParser        = require('body-parser'),
       mongoose         = require('mongoose'),
       booksController = require('./server/controller/books-controller');
+      usersController = require('./server/controller/users-controller');
 
 mongoose.connect('mongodb://localhost:27017/bookTinder');
 
@@ -28,6 +29,8 @@ app.post('/api/books/update/like', booksController.updateLike);
 app.post('/api/books/update/unlike', booksController.updateUnLike);
 
 app.post('/api/books/update/notread', booksController.updateNotRead);
+
+app.get('/api/users/getSimilar', usersController.getSimilarUsers);
 
 
 //Serve Static
