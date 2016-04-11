@@ -19,9 +19,14 @@ app.use(function(err, req, res, next) {
 
 
 //REST API
-app.get('/api/books/get', booksController.getBooks);
 
-app.get('/api/users/get', booksController.getUsers);
+app.get('/api/users/get', booksController.users);
+
+app.get('/api/books/get', booksController.books);
+
+app.post('/api/books/getBook', booksController.getBook);
+
+app.post('/api/books/getBooks', booksController.getBooks);
 
 app.post('/api/books/insert', booksController.insert);
 
@@ -30,8 +35,6 @@ app.post('/api/books/update/like', booksController.updateLike);
 app.post('/api/books/update/unlike', booksController.updateUnLike);
 
 app.post('/api/books/update/notread', booksController.updateNotRead);
-
-app.post('/api/users/getSimilarUsers', booksController.getSimilarUsers);
 
 
 //Serve Static

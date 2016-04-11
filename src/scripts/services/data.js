@@ -3,9 +3,14 @@
 angular.module('mainApp')
 .service('dataService', function($http) {
 
-  this.getBooks = function(callback){
-    $http.get('/api/books/get')
-    .then(callback);
+  this.getBooks = function(userID, booksLiked, callback){
+     $http.post('/api/books/getBooks',{userID: userID, booksLiked: booksLiked})
+     .then(callback);
+  };
+
+  this.getBook = function(bookID, callback){
+     $http.post('/api/books/getBook',{bookID: bookID})
+     .then(callback);
   };
 
   this.updateLike = function(userID, bookID){

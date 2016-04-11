@@ -1,13 +1,13 @@
-var Books = require('../model/books');
-var Users = require('../model/users');
+var Books = require("../model/books");
+var Users = require("../model/users");
 
-module.exports.getBooks = function (req, res) {
+module.exports.books = function (req, res) {
   Books.find({}, function (err, results) {
     res.json(results);
   });
 };
 
-module.exports.getUsers = function (req, res) {
+module.exports.users = function (req, res) {
   Users.find({}, function (err, results) {
     res.json(results);
   });
@@ -26,7 +26,7 @@ module.exports.insert = function (req, res) {
 };
 
 function updateBooksDB(request, response, bookOptions) {
-  bookID = request.body['bookID'];
+  bookID = request.body["bookID"];
   Books.update({ _id: bookID }, bookOptions ,function (err, results) {
     if (err) {
       console.log(err);
@@ -37,7 +37,7 @@ function updateBooksDB(request, response, bookOptions) {
 };
 
 function updateUsersDB(request, response, userOptions) {
-  userID = request.body['userID'];
+  userID = request.body["userID"];
   Users.update({ _id: userID }, userOptions ,function (err, results) {
     if (err) {
       console.log(err);
@@ -49,12 +49,12 @@ function updateUsersDB(request, response, userOptions) {
 
 module.exports.updateLike = function (req, res) {
   var bookOptions = {
-    $addToSet: { usersLiked: req.body['userID'] },
-    $pull: { usersUnLiked: req.body['userID'] }
+    $addToSet: { usersLiked: req.body["userID"] },
+    $pull: { usersUnLiked: req.body["userID"] }
   };
   var userOptions = {
-    $addToSet: { booksLiked: req.body['bookID'] },
-    $pull: { booksUnLiked: req.body['bookID'] }
+    $addToSet: { booksLiked: req.body["bookID"] },
+    $pull: { booksUnLiked: req.body["bookID"] }
   };
   updateBooksDB(req, res, bookOptions);
   updateUsersDB(req, res, userOptions);
@@ -62,12 +62,12 @@ module.exports.updateLike = function (req, res) {
 
 module.exports.updateUnLike = function (req, res) {
   var bookOptions = {
-    $addToSet: { usersUnLiked: req.body['userID'] },
-    $pull: { usersLiked: req.body['userID'] }
+    $addToSet: { usersUnLiked: req.body["userID"] },
+    $pull: { usersLiked: req.body["userID"] }
   };
   var userOptions = {
-    $addToSet: { booksUnLiked: req.body['bookID'] },
-    $pull: { booksLiked: req.body['bookID'] }
+    $addToSet: { booksUnLiked: req.body["bookID"] },
+    $pull: { booksLiked: req.body["bookID"] }
   };
   updateBooksDB(req, res, bookOptions);
   updateUsersDB(req, res, userOptions);
@@ -75,17 +75,27 @@ module.exports.updateUnLike = function (req, res) {
 
 module.exports.updateNotRead = function (req, res) {
   var bookOptions = {
-    $pull: { usersUnLiked: req.body['userID'],  usersLiked: req.body['userID'] }
+    $pull: { usersUnLiked: req.body["userID"],  usersLiked: req.body["userID"] }
   };
   var userOptions = {
-    $pull: { booksUnLiked: req.body['bookID'],  booksLiked: req.body['bookID'] }
+    $pull: { booksUnLiked: req.body["bookID"],  booksLiked: req.body["bookID"] }
   };
   updateBooksDB(req, res, bookOptions);
   updateUsersDB(req, res, userOptions);
 };
 
-module.exports.getSimilarUsers = function (req, res) {
-  var booksLikedArray = req.body['booksLiked'];
+module.exports.getBook = function (req, res) {
+  Books.findById(req.body["bookID"], function (err, results) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(results);
+    }
+  });
+};
+
+module.exports.getBooks = function (req, res) {
+  var booksLikedArray = req.body["booksLiked"];
   Users.aggregate([
   {$match: {booksLiked: {$in: booksLikedArray}}},
   {$unwind: "$booksLiked"},
@@ -99,12 +109,12 @@ module.exports.getSimilarUsers = function (req, res) {
       } else {
           var ids = [];
           users.forEach(function (item, index, array) {
-            if ( item["_id"]["userID"] != req.body['userID'] ) {
+            if ( item["_id"]["userID"] != req.body["userID"] ) {
               ids.push(item["_id"]["userID"]);
             }
           });
           Users.aggregate([
-            {$match:{'_id' : {$in: ids}}},
+            {$match:{_id : {$in: ids}}},
             {$unwind: "$booksLiked"},
             {$group: {_id:{"bookID":"$booksLiked"},matches:{$sum:1}}},
             {$sort:{matches:-1}},
@@ -113,7 +123,7 @@ module.exports.getSimilarUsers = function (req, res) {
               if (err) {
                 console.log(err);
               } else {
-                books = []
+                books = [];
                 docs.forEach(function (item, index, array) {
                   if ( booksLikedArray.indexOf(item["_id"]["bookID"]) == -1 ) {
                     books.push(item["_id"]["bookID"]);

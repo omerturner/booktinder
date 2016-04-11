@@ -6,26 +6,29 @@ angular.module('mainApp')
   $scope.userID = "56ff997244ae2660d9cb2a94";
   $scope.booksLiked = ["56ffda528d1b682542468fdc"];
 
-  dataService.getBooks(function(response) {
-    $scope.books = response.data;
-    $scope.getBook();
-  });
+  dataService.getBooks($scope.userID, $scope.booksLiked,
+    function(response) {
+      $scope.books = response.data;
+      $scope.getBook();
+    });
 
   $scope.getBook = function() {
-    $scope.book = $scope.books.pop();
-    $scope.book.read = false;
-    $scope.book.liked = false;
-    $scope.book.unliked = false;
-    if ($scope.book.usersLiked.indexOf($scope.userID) != -1 ||
-        $scope.book.usersUnLiked.indexOf($scope.userID) != -1) {
-      $scope.book.read = true;
-      if ($scope.book.usersLiked.indexOf($scope.userID) != -1) {
-        $scope.book.liked = true;
-      } else {
-        $scope.book.unliked = true;
+    dataService.getBook($scope.books.pop(), function(response) {
+      $scope.book = response.data;
+      $scope.book.read = false;
+      $scope.book.liked = false;
+      $scope.book.unliked = false;
+      if ($scope.book.usersLiked.indexOf($scope.userID) != -1 ||
+          $scope.book.usersUnLiked.indexOf($scope.userID) != -1) {
+        $scope.book.read = true;
+        if ($scope.book.usersLiked.indexOf($scope.userID) != -1) {
+          $scope.book.liked = true;
+        } else {
+          $scope.book.unliked = true;
+        }
       }
-    }
-    console.log($scope.book);
+      console.log($scope.book);
+    });
   };
 
   $scope.like = function () {
